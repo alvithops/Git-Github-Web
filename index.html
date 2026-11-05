@@ -3,21 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Git & GitHub Tutorial - Install & Remote</title>
+  <title>Git & GitHub Premium Tutorial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@400,700;400,900&family=Source+Code+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f5f0e8;
-      --bg-secondary: #e8e4dc;
-      --fg: #2d2d2d;
-      --muted: #6b6b6b;
-      --accent: #c7a17a;
-      --card: #ffffff;
-      --border: #d0c8c0;
-      --gold: #d4a853;
-      --silver: #c0c0c0;
+      --bg: #0a0a1a;
+      --bg-secondary: #120a22;
+      --bg-tertiary: #1a0a2d;
+      --fg: #e8e8f0;
+      --muted: #5a5a7a;
+      --accent: #00d4aa;
+      --accent-glow: rgba(0, 212, 170, 0.4);
+      --purple: #a855f7;
+      --cyan: #06d6a0;
+      --orange: #ff6b35;
+      --card: #160a24;
+      --border: #2a1a3a;
+      --gold: #ffd700;
     }
 
     * {
@@ -32,115 +36,124 @@
     }
 
     body {
-      font-family: 'Source Code Pro', monospace;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--fg);
       line-height: 1.6;
       overflow-x: hidden;
     }
 
-    /* Neumorphism background */
-    .neumorphism-bg {
+    /* Matrix code rain background */
+    .matrix-rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .matrix-column {
+      position: absolute;
+      top: 0;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      opacity: 0.6;
+    }
+
+    /* Glowing orbits */
+    .orbits {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      animation: orbitMove 20s linear infinite;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    @keyframes orbitMove {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Floating data points */
+    .data-points {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .dot {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: floatDot 8s ease-in-out infinite;
+    }
+
+    @keyframes floatDot {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+      50% { transform: translateY(-30px) scale(1.5); opacity: 1; }
+    }
+
+    /* Neon grid overlay */
+    .neon-grid {
       position: fixed;
       inset: 0;
       background: 
-        radial-gradient(ellangle at 20% 20%, var(--bg-secondary) 0%, var(--bg) 100%),
-        radial-gradient(ellangle at 80% 80%, #f0e8e0 0%, var(--bg) 100%);
+        linear gradient(90deg, rgba(0,212,170,0.03) 0%, transparent 50%),
+        linear gradient(0deg, rgba(168,85,247,0.03) 0%, transparent 50%);
       pointer-events: none;
-      z-index: -1;
+      z-index: 0;
     }
 
-    .noise-pattern {
+    /* Cursor trail effect */
+    .cursor-trail {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 1000;
+      transform: translate(-50%, -50%);
+      animation: trailFade 1s ease-out forwards;
+    }
+
+    @keyframes trailFade {
+      from { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+    }
+
+    /* Background pattern */
+    .bg-pattern {
       position: fixed;
       inset: 0;
-      opacity: 0.02;
-      pointer-events: none;
-      z-index: -1;
       background-image: 
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3C/rect%3E%3C/svg%3E");
+        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 40%, rgba(255, 107, 53, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    /* Glass card neumorphism */
-    .card {
-      width: 320px;
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: 
-        8px 8px 16px rgba(0, 0, 0, 0.1),
-        -8px -8px 16px rgba(255, 255, 255, 0.8);
-      padding: 2.5rem 2rem;
-      transition: all 0.3s ease;
-      margin: 2rem auto;
-    }
-
-    .card:hover {
-      box-shadow: 
-        12px 12px 24px rgba(0, 0, 0, 0.15),
-        -12px -12px 24px rgba(255, 255, 255, 0.9);
-      transform: translateY(-4px);
-    }
-
-    .card:active {
-      box-shadow: 
-        4px 4px 8px rgba(0, 0, 0, 0.1),
-        -4px -4px 8px rgba(255, 255, 255, 0.8);
-      transform: translateY(4px);
-    }
-
-    /* Syntax highlighting styles */
-    .code-block {
-      background: var(--bg-secondary);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      border: 1px solid var(--border);
-      font-family: 'Source Code Pro', monospace;
-      font-size: 0.9rem;
-      overflow-x: auto;
-      color: var(--fg);
-    }
-
-    .code-line {
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-      margin: 0.3rem 0;
-    }
-
-    .keyword { color: #e36c0a; }
-    .command { color: #569cd6; }
-    .option { color: #ce9178; }
-    .path { color: #9cdcfe; }
-    .string { color: #ce9178; }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.8rem 1.5rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      border: 1px solid var(--accent);
-      background: transparent;
-      color: var(--accent);
-      transition: all 0.3s ease;
-      margin: 0.5rem;
-    }
-
-    .btn:hover {
-      background: var(--accent);
-      color: var(--bg);
-      box-shadow: 0 4px 12px rgba(199, 161, 122, 0.3);
-    }
-
-    .btn:active {
-      transform: translateY(2px);
+    /* Noise overlay */
+    .noise {
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3C/rect%3E%3C/svg%3E");
     }
 
     /* Navigation */
@@ -152,235 +165,538 @@
       z-index: 100;
       display: flex;
       gap: 2rem;
+      padding: 0 2rem;
     }
 
     .nav-link {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: var(--muted);
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 15px;
-      transition: all 0.3s ease;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .nav-link:hover::before {
+      left: 100%;
     }
 
     .nav-link:hover {
-      background: var(--card);
-      color: var(--fg);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      color: var(--bg);
+      background: var(--accent);
+      box-shadow: 0 8px 30px var(--accent-glow), 0 -8px 30px rgba(168, 85, 247, 0.2);
     }
 
     .nav-link.active {
-      background: var(--accent);
       color: var(--bg);
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(168, 85, 247, 0.4);
+    }
+
+    .nav-link span {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-link.active span {
+      transform: translateX(5px);
     }
 
     /* Sections */
     section {
       padding: 8rem 2rem 4rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .section-header {
       text-align: center;
-      max-width: 800px;
-      margin: 0 auto 4rem;
+      max-width: 900px;
+      margin: 0 auto 5rem;
+      padding: 2rem;
     }
 
     .section-header h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5rem;
-      font-weight: 900;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--fg), var(--muted));
+      font-family: 'DM Serif Display', serif;
+      font-size: 4.5rem;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -3px;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--fg), var(--accent), var(--purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-shadow: none;
+    }
+
+    .section-header h2 .glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-header h2 .glitch::before {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      clip: rect(0, 2px, 100%, 0);
+      background: var(--accent);
+      z-index: -1;
+      animation: glitch-anim 3s infinite;
+    }
+
+    .section-header h2 .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      clip: rect(0, 2px, 100%, 0);
+      background: var(--purple);
+      z-index: -2;
+      animation: glitch-anim 3s infinite reverse;
+    }
+
+    @keyframes glitch-anim {
+      0%, 100% { clip: rect(0, 2px, 100%, 0); }
+      20% { clip: rect(60px, 9999px, 100%, 0); }
+      40% { clip: rect(10px, 9999px, 60%, 0); }
+      60% { clip: rect(30px, 9999px, 100%, 0); }
+      80% { clip: rect(0, 9999px, 30%, 0); }
     }
 
     .section-header p {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       color: var(--muted);
       margin-top: 1rem;
     }
 
     /* Command palette */
     .command-palette {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
-    }
-
-    .command-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
     }
 
-    .command-box {
+    .command-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 2rem;
-      transition: all 0.3s ease;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .command-box:hover {
+    .command-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--cyan), var(--purple));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .command-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 8px 20px rgba(199, 161, 122, 0.15);
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 60px var(--accent-glow);
+    }
+
+    .command-card:hover::before {
+      opacity: 1;
+    }
+
+    .command-card:active {
+      transform: translateY(-4px) scale(1.01);
+    }
+
+    .command-card:hover .code-block {
+      border-color: var(--accent);
     }
 
     .command-title {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
       color: var(--fg);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .command-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
 
     .command-desc {
       color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
     }
 
     .command-code {
-      background: var(--bg);
-      border-radius: 8px;
-      padding: 1rem;
-      margin: 1rem 0;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
       overflow-x: auto;
+      border: 1px solid var(--border);
     }
 
-    .command-code .keyword { color: #a36807; }
-    .command-code .command { color: #2d7bc5; }
-    .command-code .option { color: #85660f; }
+    .code-line {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      margin: 0.3rem 0;
+    }
+
+    .code-keyword { color: var(--cyan); }
+    .code-command { color: var(--accent); }
+    .code-option { color: var(--purple); }
+    .code-path { color: var(--orange); }
+    .code-string { color: var(--gold); }
+
+    .command-copy {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .command-copy:hover {
+      color: var(--accent);
+    }
 
     /* Steps section */
-    .steps {
+    .steps-section {
       max-width: 1000px;
       margin: 0 auto;
     }
 
     .step {
-      margin-bottom: 3rem;
+      margin-bottom: 4rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: stepIn 0.8s ease forwards;
+    }
+
+    .step:nth-child(1) { animation-delay: 0.1s; }
+    .step:nth-child(2) { animation-delay: 0.2s; }
+    .step:nth-child(3) { animation-delay: 0.3s; }
+    .step:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes stepIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .step-number {
-      width: 60px;
-      height: 60px;
-      background: var(--accent);
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--accent), var(--cyan));
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
       color: var(--bg);
       margin-right: 1.5rem;
+      float: left;
+    }
+
+    .step-content {
+      overflow: hidden;
     }
 
     .step-content h3 {
       font-size: 1.8rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
     }
 
     .step-content p {
       color: var(--muted);
       font-size: 1.1rem;
+      line-height: 1.8;
     }
 
-    /* Footer */
-    footer {
-      padding: 4rem 2rem 2rem;
-      background: var(--bg-secondary);
+    .step-number span {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--bg);
+      margin-top: 2px;
     }
 
-    .footer {
-      max-width: 1200px;
+    /* Feature highlights */
+    .features-highlight {
+      max-width: 1000px;
       margin: 0 auto;
+    }
+
+    .feature-item {
+      margin-bottom: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--accent), var(--cyan));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      font-size: 1.8rem;
+    }
+
+    .feature-icon i {
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+
+    .feature-item h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-item p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* CTAs */
+    .cta-section {
+      padding: 8rem 2rem;
       text-align: center;
     }
 
-    .footer p {
+    .cta-card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, var(--card), var(--bg-secondary));
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 4rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: radial-gradient(circle at 30% 20%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
+                      radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+    }
+
+    .cta-card h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-card p {
       color: var(--muted);
-      font-size: 1.1rem;
-      margin-top: 1rem;
+      font-size: 1.4rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Database animation */
+    .db-animation {
+      position: fixed;
+      width: 600px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .db-connection {
+      position: absolute;
+      border: 2px solid var(--accent);
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--card), var(--bg-secondary));
+      padding: 2rem;
+      animation: dbConnect 4s ease-in-out infinite;
+    }
+
+    @keyframes dbConnect {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -30px) scale(1.1); }
+    }
+
+    .db-query {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-left: 3px solid var(--accent);
+    }
+
+    .db-tag {
+      display: inline-block;
+      background: rgba(0, 212, 170, 0.1);
+      color: var(--accent);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      margin: 0.2rem;
     }
 
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
-      .card, .nav-link, .btn {
-        transition: none;
+      *, *::before, *::after {
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
       }
+      .matrix-column { display: none; }
+      .orbits { animation: none; }
+      .dot { animation: none; }
+      .step { animation: none; opacity: 1; transform: none; }
     }
 
     /* Focus states */
     a:focus-visible, button:focus-visible {
       outline: 2px solid var(--gold);
-      outline-offset: 2px;
+      outline-offset: 3px;
     }
 
     /* Mobile */
     @media (max-width: 768px) {
-      .command-row {
-        grid-template-columns: 1fr;
-      }
-      
-      nav {
-        top: 1rem;
+      .nav-link {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem;
       }
       
       .section-header h2 {
+        font-size: 3rem;
+      }
+      
+      .command-palette {
+        grid-template-columns: 1fr;
+      }
+      
+      .step-number {
+        float: none;
+        margin-bottom: 1rem;
+      }
+      
+      .cta-card h2 {
         font-size: 2.5rem;
       }
       
-      nav a {
-        padding: 0.5rem;
-        font-size: 1rem;
+      .cta-btns {
+        flex-direction: column;
+        align-items: center;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Background -->
-  <div class="neumorphism-bg"></div>
-  <div class="noise-pattern"></div>
+  <!-- Background elements -->
+  <div class="bg-pattern"></div>
+  <div class="noise"></div>
+  <div class="matrix-rain" id="matrix-rain"></div>
+  <div class="orbits"></div>
+  <div class="data-points" id="data-points"></div>
+  <div class="db-animation" id="db-animation"></div>
+  <div class="neon-grid"></div>
 
   <!-- Navigation -->
   <nav>
-    <a href="#install" class="nav-link active">Instalasi Git</a>
-    <a href="#remote" class="nav-link">Remote GitHub</a>
+    <a href "#install" class="nav-link active"><span>Instalasi Git</span></a>
+    <a href="#remote" class="nav-link"><span>Remote GitHub</span></a>
   </nav>
 
   <!-- Install Section -->
   <section id="install">
     <div class="section-header">
-      <h2>Instalasi Git di VSCode</h2>
-      <p>Tutorial lengkap menginstall Git dan konfigurasi awal</p>
+      <h2>Instalasi Git</h2>
     </div>
 
     <div class="command-palette">
-      <div class="card">
+      <div class="command-card">
         <div class="code-block">
-          <div class="code-line"><span class="keyword">winget</span> install <span class="option">--id</span> Git.Git <span class="option">-e</span> <span class="option">--source</span> winget</div>
+          <div class="code-line"><span class="code-command">winget</span> <span class="code-option">install</span> <span class="code-option">--id</span> Git.Git <span class="code-option">-e</span> <span class="code-option">--source</span> winget</div>
         </div>
-        <h3 class="command-title">Instal via Windows Package Manager</h3>
-        <p class="command-desc">Perintah tercepat untuk menginstall Git terbaru di sistem Windows menggunakan Windows Package Manager.</p>
+        <h3 class="command-title">Via Windows Package Manager</h3>
+        <p class="command-desc">Instalasi Git terbaru melalui Windows Package Manager (cepat dan resmi).</p>
+        <button class="command-copy">Copy</button>
       </div>
 
-      <div class="card">
+      <div class="command-card">
         <div class="code-block">
           <div class="code-line">git --version</div>
         </div>
-        <h3 class="command-title">Verifikasi Instalasi</h3>
-        <p class="command-desc">Mencek versii Git yang berhasil terinstall di sistem.</p>
+        <h3 class="command-title">Verifikasi Versi</h3>
+        <p class="command-desc">Cek apakah Git sudah terinstall dengan benar.</p>
       </div>
 
-      <div class="card">
+      <div class="command-card">
         <div class="code-block">
-          <div class="code-line">git config --global user.name "<span class="string">Nama Anda</span>"</div>
+          <div class="code-line">git config --global user.name "<span class="code-string">Nama Anda</span>"</div>
           <div class="code-line">git config --global user.email "email@anda.com"</div>
         </div>
-        <h3 class="command-title">Konfigurasi Global</h3>
-        <p class="command-desc">Menetapkan nama pengguna dan email untuk commit Git (wajib dilakukan sekali).</p>
+        <h3 class="command-title">Konfigurasi Awal</h3>
+        <p class="command-desc">Setel nama dan email global untuk commit Git.</p>
       </div>
     </div>
   </section>
@@ -389,113 +705,243 @@
   <section id="remote">
     <div class="section-header">
       <h2>Remote Project ke GitHub</h2>
-      <p>Tutorial meremotte project lokal ke repository GitHub</p>
     </div>
 
     <div class="command-palette">
-      <div class="card">
+      <div class="command-card">
         <div class="code-block">
           <div class="code-line">git init</div>
         </div>
-        <h3 class="command-title">Inisialisasi Repository</h3>
-        <p class="command-desc">Membuat repository Git lokal baru di folder project Anda.</p>
+        <h3 class="command-title">Inisialisasi Repo</h3>
+        <p class="command-desc">Membuat repository Git lokal baru.</p>
       </div>
 
-      <div class="card">
+      <div class="command-card">
         <div class="code-block">
           <div class="code-line">git add .</div>
         </div>
-        <h3 class="command-title">Menambah File</h3>
-        <p class="command-desc">Menyiapkan semua file di working directory untuk commit.</p>
+        <h3 class="command-title">Add Files</h3>
+        <p class="command-desc">Menyiapkan semua file untuk commit.</p>
       </div>
 
-      <div class="card">
+      <div class="command-card">
         <div class="code-block">
-          <div class="code-line">git commit -m "project"</div>
+          <div class="code-line">git commit -m <span class="code-string">"project"</span></div>
         </div>
         <h3 class="command-title">Commit Perubahan</h3>
-        <p class="command-desc">Menyimpan perubahan dengan pesan commit "project".</p>
+        <p class="command-desc">Simpan perubahan dengan pesan "project".</p>
       </div>
-    </div>
 
-    <div class="card" style="margin-top: 3rem;">
-      <div class="code-block">
-        <div class="code-line">git branch -M main</div>
-        <div class="code-line">git remote add origin "nama repo github"</div>
-        <div class="code-line">git push -u origin main</div>
+      <div class="command-card">
+        <div class="code-block">
+          <div class="code-line">git branch -M main</div>
+          <div class="code-line">git remote add origin "nama repo github"</div>
+          <div class="code-line">git push -u origin main</div>
+        </div>
+        <h3 class="command-title">Git Flow Lengkap</h3>
+        <p class="command-desc">Connect proyek lokal ke remote repository GitHub.</p>
       </div>
-      <h3 class="command-title">Git Flow Lengkap</h3>
-      <p class="command-desc">Setelah commit, arahkan project ke remote repository GitHub dan push ke branch main.</p>
     </div>
   </section>
 
-  <!-- Summary Steps -->
-  <section style="max-width: 1000px; margin: 0 auto; padding: 6rem 2rem;">
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h3>Instal Git</h3>
-          <p>Gunakan winget atau installer resmi dari git-scm.com</p>
+  <!-- Database Animation Section -->
+  <section style="padding: 6rem 2rem;">
+    <div class="db-animation">
+      <div class="db-connection">
+        <div class="db-query">
+          <span class="db-tag">POSTGRES</span>
+          <span class="db-tag">MYSQL</span>
+          <span class="db-tag">MONGODB</span>
+        </div>
+        <div class="db-query">
+          INSERT INTO repos (name, desc, stars) VALUES ('project', 'IT Platform', 1500)
+        </div>
+        <div class="db-query">
+          SELECT * FROM branches WHERE status = 'main'
         </div>
       </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h3>Konfigurasi Awal</h3>
-          <p>Set user.name dan user.email secara global</p>
+    </div>
+  </section>
+
+  <!-- Features Highlights -->
+  <section style="max-width: 1100px; margin: 0 auto; padding: 6rem 2rem;">
+    <div class="features-highlight">
+      <div class="feature-item">
+        <div class="feature-icon">📁</div>
+        <div class="feature-content">
+          <h3>Pengelolaan Proyek</h3>
+          <p>Alat lengkap untuk melacak progres, milestone, dan kolaborasi tim pengembangan perangkat lunak modern.</p>
         </div>
       </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h3>Inisialisasi & Commit</h3>
-          <p>git init → git add . → git commit -m "pesan"</p>
+
+      <div class="feature-item">
+        <div class="feature-icon">💻</div>
+        <div class="feature-content">
+          <h3>Editor Code Terintegrasi</h3>
+          <p>Edit, debug, dan commit langsung dari interface tanpa perlu keluar dari terminal.</p>
         </div>
       </div>
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h3>Connect ke GitHub</h3>
-          <p>git remote add origin URL → git push -u origin main</p>
+
+      <div class="feature-item">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-content">
+          <h3>Cloud Terminal</h3>
+          <p>Akses terminal dari mana saja dengan berbagai bahasa pemrograman dan database terintegrasi.</p>
         </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-content">
+          <h3>Repository Analytics</h3>
+          <p>Lihat statistik push, commit, dan aktivitas contributors dalam real-time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-card">
+      <h2>Mulai Journey Git Anda</h2>
+      <p>Dapatkan akses segera ke tutorial lengkap, fitur premium, dan komunitas developer.</p>
+      <div class="cta-btns">
+        <button class="btn" style="background: var(--accent); color: var(--bg);">Daftar Gratis</button>
+        <button class="btn-secondary">Lihat Dokumentasi</button>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer>
-    <div class="footer">
-      <p>Tutorial Git & GitHub • 2024 • Designed for developers</p>
+  <footer style="padding: 4rem 2rem 2rem; background: var(--bg-secondary);">
+    <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
+      <p>2024 Git & GitHub Premium Tutorial • Dibuat dengan teknologi modern untuk developer</p>
     </div>
   </footer>
 
   <script>
-    // Navigation active state
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section');
+    // Initialize Matrix Rain
+    function initMatrixRain() {
+      const matrixRain = document.getElementById('matrix-rain');
+      const chars = '01';
+      const columnCount = Math.floor(window.innerWidth / 20);
+      const rows = Math.floor(window.innerHeight / 20) + 2;
+      
+      for (let i = 0; i < columnCount; i++) {
+        const column = document.createElement('div');
+        column.className = 'matrix-column';
+        column.style.left = (i * 20) + 'px';
+        column.style.width = '20px';
+        column.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        column.style.opacity = Math.random().toString(16).substring(2) / 5 + 0.2;
+        
+        const text = [];
+        for (let j = 0; j < rows; j++) {
+          text.push(chars[Math.floor(Math.random() * chars.length)]);
+        }
+        column.innerHTML = text.join('<br>');
+        matrixRain.appendChild(column);
+      }
+    }
 
+    // Initialize Data Points
+    function initDataPoints() {
+      const dataPoints = document.getElementById('data-points');
+      const count = Math.min(20, Math.floor(window.innerWidth / 50));
+      
+      for (let i = 0; i < count; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.left = (Math.random() * 100) + '%';
+        dot.style.top = (Math.random() * 100) + '%';
+        dot.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        dot.style.animationDelay = (Math.random() * 4) + 's';
+        dataPoints.appendChild(dot);
+      }
+    }
+
+    // Initialize Orbits
+    function initOrbits() {
+      const orbits = document.querySelector('.orbits');
+      if (!orbits) return;
+      
+      const size = Math.max(200, window.innerWidth * 0.5);
+      orbits.style.width = size + 'px';
+      orbits.style.height = size + 'px';
+    }
+
+    // Database connection animation
+    function initDBAnimation() {
+      const dbAnimation = document.getElementById('db-animation');
+      if (!dbAnimation) return;
+      
+      const connection = dbAnimation.querySelector('.db-connection');
+      if (!connection) return;
+      
+      let direction = 1;
+      let scale = 1;
+      
+      setInterval(() => {
+        const x = Math.random() * 60 * direction;
+        const y = Math.random() * 60 * direction;
+        scale = Math.random() > 0.5 ? 1.1 : 1;
+        connection.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      }, 4000);
+    }
+
+    // Command copy functionality
+    document.querySelectorAll('.command-copy').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const codeBlock = this.parentElement.querySelector('.code-block');
+        const text = codeBlock.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 2000);
+        });
+      });
+    });
+
+    // Scroll reveal animation
     const observerOptions = {
-      threshold: 0.3,
+      threshold: 0.2,
+      rootMargin: '0px 0px -50px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-          navLinks.forEach(link => link.classList.remove('active'));
-          // Remove existing active, add to matching link
-          document.querySelectorAll('.nav-link').forEach(link => {
-            if (link.getAttribute('href').slice(1) === entry.target.id) {
-              link.classList.add('active');
-            }
-          });
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }, index * 150);
         }
       });
     }, observerOptions);
 
-    sections.forEach(section => observer.observe(section));
+    document.querySelectorAll('.command-card, .step, .feature-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
 
-    // Smooth scroll for nav links
+    // Nav link active state
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.remove('active'));
+          const id = entry.target.getAttribute('id');
+          document.querySelector('.nav-link[href*=' + id + ']').classList.add('active');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => scrollObserver.observe(section));
+
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -504,6 +950,29 @@
           target.scrollIntoBehavior({ smooth: true });
         }
       });
+    });
+
+    // Cursor trail
+    document.addEventListener('mousemove', (e) => {
+      const trail = document.createElement('div');
+      trail.className = 'cursor-trail';
+      trail.style.left = e.clientX + 'px';
+      trail.style.top = e.clientY + 'px';
+      document.body.appendChild(trail);
+      setTimeout(() => trail.remove(), 1000);
+    });
+
+    // Initialize on load
+    window.addEventListener('load', () => {
+      initMatrixRain();
+      initDataPoints();
+      initOrbits();
+      initDBAnimation();
+    });
+
+    // Resize handling
+    window.addEventListener('resize', () => {
+      initMatrixRain();
     });
   </script>
 </body>
