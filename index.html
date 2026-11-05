@@ -33,7 +33,91 @@
       box-sizing: border-box;
     }
 
-    html {
+    
+
+/* Data crossing network animation */
+.data-network {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.node {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+  animation: nodeAppear 2s ease-in-out infinite;
+}
+
+.node-1 { top: 20%; left: 10%; animation-delay: 0s; }
+.node-2 { top: 40%; left: 70%; animation-delay: 0.5s; }
+.node-3 { top: 60%; left: 30%; animation-delay: 1s; }
+.node-4 { top: 80%; left: 85%; animation-delay: 1.5s; }
+
+@keyframes nodeAppear {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Moving data packets */
+.data-packet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+.packet-1 {
+  top: 30%; left: -10%;
+  animation: packetMove1 8s linear infinite;
+}
+.packet-2 {
+  top: 50%; left: -15%;
+  animation: packetMove2 10s linear infinite;
+}
+.packet-3 {
+  top: 70%; left: -20%;
+  animation: packetMove3 12s linear infinite;
+}
+
+@keyframes packetMove1 { to { transform: translateX(110vw); } }
+@keyframes packetMove2 { to { transform: translateX(120vw); } }
+@keyframes packetMove3 { to { transform: translateX(130vw); } }
+
+/* Connection lines */
+.connection-line {
+  position: absolute;
+  border: 1px solid var(--accent);
+  opacity: 0.3;
+}
+
+.line-horizontal { height: 1px; }
+.line-vertical { width: 1px; }
+
+/* Glowing tech pattern */
+.tech-pattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: 
+    linear-gradient(rgba(0, 229, 160, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 160, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .node, .data-packet { display: none; }
+  .line-1, .line-2, .line-3, .line-4 { animation: none; }
+}html {
       font-size: 62.5%;
       overflow-x: hidden;
     }
@@ -56,68 +140,6 @@
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; }
 
-    /* ========== BACKGROUND ANIMATION ========== */
-    .bg-canvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Moving neon lines background */
-    .neon-lines {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .line {
-      position: absolute;
-      border-left: 1px solid var(--accent);
-      opacity: 0.6;
-    }
-
-    .line-1 { width: 2px; animation: line1 20s linear infinite; top: 20%; left: -2px; }
-    .line-2 { width: 1.5px; animation: line2 25s linear infinite; top: 50%; left: 30%; }
-    .line-3 { width: 2.5px; animation: line3 18s linear infinite; top: 80%; left: 60%; }
-    .line-4 { width: 1px; animation: line4 30s linear infinite; bottom: 10%; left: 15%; }
-
-    @keyframes line1 { to { transform: translateX(100vw); } }
-    @keyframes line2 { to { transform: translateX(100vw); } }
-    @keyframes line3 { to { transform: translateX(100vw); } }
-    @keyframes line4 { to { transform: translateX(100vw); } }
-
-    /* Floating orbs */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(20px);
-      opacity: 0.5;
-      animation: floatOrb 8s ease-in-out infinite;
-    }
-
-    .orb-1 { width: 100px; height: 100px; background: var(--accent); top: -50%; left: -50%; animation-delay: 0s; }
-    .orb-2 { width: 80px; height: 80px; background: var(--purple); top: 60%; left: 80%; animation-delay: 2s; }
-    .orb-3 { width: 120px; height: 120px; background: #ff6b35; bottom: -60%; right: -60%; animation-delay: 4s; }
-
-    @keyframes floatOrb {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -30px) scale(1.1); }
-      66% { transform: translate(-20px, 20px) scale(0.9); }
-    }
-
-    /* Grid pattern overlay */
-    .grid-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background-image: 
-        linear-gradient(rgba(0, 229, 160, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 229, 160, 0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
     }
 
     /* ========== MAIN CONTENT ========== */
@@ -264,6 +286,41 @@
     .path { color: var(--purple); }
     .string { color: var(--accent); }
 
+    /* Individual copy buttons inside code blocks */
+    .code-copy-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-family: 'Source Code Pro', monospace;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10;
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    .code-block:hover .code-copy-btn {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .code-copy-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .code-copy-btn:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 1px;
+    }
+
+    /* Group copy button (header level) */
     .copy-btn {
       background: transparent;
       border: 1px solid var(--accent);
@@ -469,13 +526,16 @@
           <h3>Instalasi Git</h3>
           <div class="code-block">
             <div class="code-line"><span class="keyword">winget</span> <span class="option">install</span> <span class="option">--id</span> Git.Git <span class="option">-e</span> <span class="option">--source</span> winget</div>
+            <button class="code-copy-btn">Copy</button>
           </div>
           <div class="code-block">
             <div class="code-line">git --version</div>
+            <button class="code-copy-btn">Copy</button>
           </div>
           <div class="code-block">
             <div class="code-line">git config --global user.name "<span class="string">Nama Anda</span>"</div>
-            <div class="code-line">git config --global user.email "email@anda.com"</div>
+            <button class="code-copy-btn">Copy</button>
+</div>
           </div>
         </div>
 
@@ -483,17 +543,21 @@
           <h3>Remote GitHub</h3>
           <div class="code-block">
             <div class="code-line">git init</div>
-          </div>
+            <button class="code-copy-btn">Copy</button>
+</div>
           <div class="code-block">
             <div class="code-line">git add .</div>
-          </div>
+            <button class="code-copy-btn">Copy</button>
+</div>
           <div class="code-block">
             <div class="code-line">git commit -m <span class="string">"project"</span></div>
-          </div>
+            <button class="code-copy-btn">Copy</button>
+</div>
           <div class="code-block">
             <div class="code-line">git branch -M main</div>
             <div class="code-line">git remote add origin "nama repo github"</div>
             <div class="code-line">git push -u origin main</div>
+            <button class="code-copy-btn">Copy</button>
           </div>
         </div>
       </div>
