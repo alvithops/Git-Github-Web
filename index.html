@@ -43,117 +43,51 @@
       overflow-x: hidden;
     }
 
-    /* Matrix code rain background */
-    .matrix-rain {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
+      }
+      .matrix-column { display: none; }
+      .orbits { animation: none; }
+      .dot { animation: none; }
+      .step { animation: none; opacity: 1; transform: none; }
     }
 
-    .matrix-column {
-      position: absolute;
-      top: 0;
-      color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
-      opacity: 0.6;
-    }
-
-    /* Glowing orbits */
-    .orbits {
-      position: fixed;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      animation: orbitMove 20s linear infinite;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 0;
-      opacity: 0.5;
-    }
-
-    @keyframes orbitMove {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    /* Floating data points */
-    .data-points {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .dot {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: var(--accent);
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: floatDot 8s ease-in-out infinite;
-    }
-
-    @keyframes floatDot {
-      0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
-      50% { transform: translateY(-30px) scale(1.5); opacity: 1; }
-    }
-
-    /* Neon grid overlay */
-    .neon-grid {
-      position: fixed;
-      inset: 0;
-      background: 
-        linear gradient(90deg, rgba(0,212,170,0.03) 0%, transparent 50%),
-        linear gradient(0deg, rgba(168,85,247,0.03) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Cursor trail effect */
-    .cursor-trail {
-      position: fixed;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent);
-      opacity: 0.3;
-      pointer-events: none;
-      z-index: 1000;
-      transform: translate(-50%, -50%);
-      animation: trailFade 1s ease-out forwards;
-    }
-
-    @keyframes trailFade {
-      from { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-      to { opacity: 0; transform: translate(-50%, -50%) scale(2); }
-    }
-
-    /* Background pattern */
+    /* Background Pattern - simplified */
     .bg-pattern {
       position: fixed;
       inset: 0;
-      background-image: 
-        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 60% 40%, rgba(255, 107, 53, 0.08) 0%, transparent 50%);
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* Noise overlay */
+    /* Noise overlay - simpler */
     .noise {
       position: fixed;
       inset: 0;
-      opacity: 0.03;
       pointer-events: none;
       z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3C/rect%3E%3C/svg%3E");
+      background: 
+        radial-gradient(circle at 20% 20%, transparent 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, transparent 0%, transparent 50%),
+        radial-gradient(circle at 60% 40%, transparent 0%, transparent 50%);
+    }
+
+    /* Neon grid - simpler */
+    .neon-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: 
+        linear-gradient(rgba(0, 212, 170, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 170, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
     }
 
     /* Navigation */
@@ -187,7 +121,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
       transition: left 0.5s ease;
     }
 
@@ -246,45 +180,6 @@
       text-shadow: none;
     }
 
-    .section-header h2 .glitch {
-      position: relative;
-      display: inline-block;
-    }
-
-    .section-header h2 .glitch::before {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      clip: rect(0, 2px, 100%, 0);
-      background: var(--accent);
-      z-index: -1;
-      animation: glitch-anim 3s infinite;
-    }
-
-    .section-header h2 .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      clip: rect(0, 2px, 100%, 0);
-      background: var(--purple);
-      z-index: -2;
-      animation: glitch-anim 3s infinite reverse;
-    }
-
-    @keyframes glitch-anim {
-      0%, 100% { clip: rect(0, 2px, 100%, 0); }
-      20% { clip: rect(60px, 9999px, 100%, 0); }
-      40% { clip: rect(10px, 9999px, 60%, 0); }
-      60% { clip: rect(30px, 9999px, 100%, 0); }
-      80% { clip: rect(0, 9999px, 30%, 0); }
-    }
-
     .section-header p {
       font-size: 1.6rem;
       color: var(--muted);
@@ -324,8 +219,8 @@
 
     .command-card:hover {
       border-color: var(--accent);
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 60px var(--accent-glow);
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), 0 0 40px var(--accent-glow);
     }
 
     .command-card:hover::before {
@@ -532,8 +427,8 @@
       left: 0;
       right: 0;
       height: 100%;
-      background: radial-gradient(circle at 30% 20%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
-                      radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+      background: radial-gradient(circle at 30% 20%, rgba(0, 212, 170, 0.12) 0%, transparent 50%),
+                      radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 50%);
     }
 
     .cta-card h2 {
@@ -555,11 +450,11 @@
       flex-wrap: wrap;
     }
 
-    /* Database animation */
+    /* Database animation - simplified */
     .db-animation {
       position: fixed;
-      width: 600px;
-      height: 400px;
+      width: 500px;
+      height: 300px;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -572,45 +467,27 @@
       border: 2px solid var(--accent);
       border-radius: 4px;
       background: linear-gradient(135deg, var(--card), var(--bg-secondary));
-      padding: 2rem;
-      animation: dbConnect 4s ease-in-out infinite;
-    }
-
-    @keyframes dbConnect {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(30px, -30px) scale(1.1); }
+      padding: 1.5rem;
     }
 
     .db-query {
       background: var(--bg-secondary);
-      border-radius: 8px;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border-left: 2px solid var(--accent);
     }
 
     .db-tag {
       display: inline-block;
-      background: rgba(0, 212, 170, 0.1);
+      background: rgba(0, 212, 170, 0.08);
       color: var(--accent);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.65rem;
       font-family: 'JetBrains Mono', monospace;
       text-transform: uppercase;
-      margin: 0.2rem;
-    }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        transition-duration: 0s !important;
-        animation-duration: 0s !important;
-      }
-      .matrix-column { display: none; }
-      .orbits { animation: none; }
-      .dot { animation: none; }
-      .step { animation: none; opacity: 1; transform: none; }
+      margin: 0.1rem;
     }
 
     /* Focus states */
@@ -637,6 +514,14 @@
       .step-number {
         float: none;
         margin-bottom: 1rem;
+        margin-right: 0;
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+      }
+      
+      .step-content h3 {
+        font-size: 1.5rem;
       }
       
       .cta-card h2 {
@@ -647,6 +532,11 @@
         flex-direction: column;
         align-items: center;
       }
+      
+      .feature-item {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+      }
     }
   </style>
 </head>
@@ -654,15 +544,11 @@
   <!-- Background elements -->
   <div class="bg-pattern"></div>
   <div class="noise"></div>
-  <div class="matrix-rain" id="matrix-rain"></div>
-  <div class="orbits"></div>
-  <div class="data-points" id="data-points"></div>
-  <div class="db-animation" id="db-animation"></div>
   <div class="neon-grid"></div>
 
   <!-- Navigation -->
   <nav>
-    <a href "#install" class="nav-link active"><span>Instalasi Git</span></a>
+    <a href="#install" class="nav-link active"><span>Instalasi Git</span></a>
     <a href="#remote" class="nav-link"><span>Remote GitHub</span></a>
   </nav>
 
@@ -744,25 +630,6 @@
     </div>
   </section>
 
-  <!-- Database Animation Section -->
-  <section style="padding: 6rem 2rem;">
-    <div class="db-animation">
-      <div class="db-connection">
-        <div class="db-query">
-          <span class="db-tag">POSTGRES</span>
-          <span class="db-tag">MYSQL</span>
-          <span class="db-tag">MONGODB</span>
-        </div>
-        <div class="db-query">
-          INSERT INTO repos (name, desc, stars) VALUES ('project', 'IT Platform', 1500)
-        </div>
-        <div class="db-query">
-          SELECT * FROM branches WHERE status = 'main'
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Features Highlights -->
   <section style="max-width: 1100px; margin: 0 auto; padding: 6rem 2rem;">
     <div class="features-highlight">
@@ -820,23 +687,29 @@
   </footer>
 
   <script>
-    // Initialize Matrix Rain
+    // Initialize Matrix Rain - optimized with limited columns
     function initMatrixRain() {
       const matrixRain = document.getElementById('matrix-rain');
+      if (!matrixRain) return;
+      
+      // Remove existing columns first
+      matrixRain.innerHTML = '';
+      
       const chars = '01';
-      const columnCount = Math.floor(window.innerWidth / 20);
-      const rows = Math.floor(window.innerHeight / 20) + 2;
+      // Limited columns based on viewport width
+      const columnCount = Math.min(30, Math.floor(window.innerWidth / 25));
+      const maxRows = Math.max(10, Math.floor(window.innerHeight / 20) + 2);
       
       for (let i = 0; i < columnCount; i++) {
         const column = document.createElement('div');
         column.className = 'matrix-column';
-        column.style.left = (i * 20) + 'px';
+        column.style.left = (i * 25) + 'px';
         column.style.width = '20px';
-        column.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        column.style.opacity = Math.random().toString(16).substring(2) / 5 + 0.2;
+        column.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        column.style.opacity = (Math.random() * 0.3 + 0.3).toString(16).substring(2) / 5 + 0.2;
         
         const text = [];
-        for (let j = 0; j < rows; j++) {
+        for (let j = 0; j < maxRows; j++) {
           text.push(chars[Math.floor(Math.random() * chars.length)]);
         }
         column.innerHTML = text.join('<br>');
@@ -844,67 +717,65 @@
       }
     }
 
-    // Initialize Data Points
+    // Initialize Data Points - reduced count
     function initDataPoints() {
       const dataPoints = document.getElementById('data-points');
-      const count = Math.min(20, Math.floor(window.innerWidth / 50));
+      if (!dataPoints) return;
+      
+      dataPoints.innerHTML = '';
+      
+      const count = Math.min(12, Math.floor(window.innerWidth / 80));
       
       for (let i = 0; i < count; i++) {
         const dot = document.createElement('div');
         dot.className = 'dot';
         dot.style.left = (Math.random() * 100) + '%';
         dot.style.top = (Math.random() * 100) + '%';
-        dot.style.animationDuration = (Math.random() * 4 + 4) + 's';
-        dot.style.animationDelay = (Math.random() * 4) + 's';
+        dot.style.animationDuration = (Math.random() * 3 + 5) + 's';
+        dot.style.animationDelay = (Math.random() * 3) + 's';
         dataPoints.appendChild(dot);
       }
     }
 
-    // Initialize Orbits
+    // Initialize Orbits - simpler
     function initOrbits() {
       const orbits = document.querySelector('.orbits');
       if (!orbits) return;
       
-      const size = Math.max(200, window.innerWidth * 0.5);
-      orbits.style.width = size + 'px';
-      orbits.style.height = size + 'px';
+      orbits.style.width = Math.max(150, window.innerWidth * 0.3) + 'px';
+      orbits.style.height = Math.max(150, window.innerWidth * 0.3) + 'px';
     }
 
-    // Database connection animation
+    // Database connection animation - simplified
     function initDBAnimation() {
-      const dbAnimation = document.getElementById('db-animation');
+      const dbAnimation = document.querySelector('.db-animation');
       if (!dbAnimation) return;
       
       const connection = dbAnimation.querySelector('.db-connection');
       if (!connection) return;
       
-      let direction = 1;
-      let scale = 1;
-      
-      setInterval(() => {
-        const x = Math.random() * 60 * direction;
-        const y = Math.random() * 60 * direction;
-        scale = Math.random() > 0.5 ? 1.1 : 1;
-        connection.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-      }, 4000);
+      // Simple float animation
+      connection.style.animation = 'dbConnect 3s ease-in-out infinite';
     }
 
-    // Command copy functionality
+    // Command copy functionality - optimized
     document.querySelectorAll('.command-copy').forEach(btn => {
       btn.addEventListener('click', function() {
         const codeBlock = this.parentElement.querySelector('.code-block');
+        if (!codeBlock) return;
         const text = codeBlock.innerText;
+        if (!text) return;
         navigator.clipboard.writeText(text).then(() => {
           this.textContent = 'Copied!';
-          setTimeout(() => this.textContent = 'Copy', 2000);
+          setTimeout(() => this.textContent = 'Copy', 1500);
         });
       });
     });
 
-    // Scroll reveal animation
+    // Scroll reveal with Intersection Observer - more efficient
     const observerOptions = {
-      threshold: 0.2,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.15,
+      rootMargin: '0px 0px -30px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -913,15 +784,15 @@
           setTimeout(() => {
             entry.target.style.opacity = '1';
             entry.target.style.transform = 'translateY(0)';
-          }, index * 150);
+          }, index * 100);
         }
       });
     }, observerOptions);
 
     document.querySelectorAll('.command-card, .step, .feature-item').forEach(el => {
       el.style.opacity = '0';
-      el.style.transform = 'translateY(30px)';
-      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       observer.observe(el);
     });
 
@@ -934,7 +805,8 @@
         if (entry.isIntersecting) {
           navLinks.forEach(link => link.classList.remove('active'));
           const id = entry.target.getAttribute('id');
-          document.querySelector('.nav-link[href*=' + id + ']').classList.add('active');
+          const matchingLink = document.querySelector('.nav-link[href*=' + id + ']');
+          if (matchingLink) matchingLink.classList.add('active');
         }
       });
     }, { threshold: 0.3 });
@@ -952,27 +824,41 @@
       });
     });
 
-    // Cursor trail
+    // Cursor trail - throttled and limited
+    let trailTimeout = null;
     document.addEventListener('mousemove', (e) => {
+      // Remove existing trail
+      const existing = document.querySelector('.cursor-trail');
+      if (existing) existing.remove();
+      
       const trail = document.createElement('div');
       trail.className = 'cursor-trail';
       trail.style.left = e.clientX + 'px';
       trail.style.top = e.clientY + 'px';
       document.body.appendChild(trail);
-      setTimeout(() => trail.remove(), 1000);
-    });
+      setTimeout(() => trail.remove(), 800);
+    }, { passive: true });
 
-    // Initialize on load
+    // Initialize on load - deferred for better performance
     window.addEventListener('load', () => {
-      initMatrixRain();
-      initDataPoints();
-      initOrbits();
-      initDBAnimation();
+      // Small delay to allow page content to render first
+      setTimeout(() => {
+        initMatrixRain();
+        initDataPoints();
+        initOrbits();
+        initDBAnimation();
+      }, 200);
     });
 
-    // Resize handling
+    // Resize handling - throttled
+    let resizeTimeout = null;
     window.addEventListener('resize', () => {
-      initMatrixRain();
+      if (!resizeTimeout) {
+        resizeTimeout = setTimeout(() => {
+          resizeTimeout = null;
+          initMatrixRain();
+        }, 100);
+      }
     });
   </script>
 </body>
