@@ -3,27 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Git & GitHub Premium Tutorial</title>
+  <title>Git & VSCode Premium Tutorial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ========== CSS VARIABLES ========== */
     :root {
       --bg: #0a0a1a;
-      --bg-secondary: #120a22;
-      --bg-tertiary: #1a0a2d;
+      --bg-secondary: #101025;
       --fg: #e8e8f0;
       --muted: #5a5a7a;
       --accent: #00d4aa;
-      --accent-glow: rgba(0, 212, 170, 0.4);
-      --purple: #a855f7;
-      --cyan: #06d6a0;
-      --orange: #ff6b35;
-      --card: #160a24;
-      --border: #2a1a3a;
+      --accent-secondary: #a855f7;
+      --card: #131328;
+      --border: #2a2a4a;
       --gold: #ffd700;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2rem;
+      --space-xl: 3rem;
     }
 
+    /* ========== RESET & BASE ========== */
     * {
       margin: 0;
       padding: 0;
@@ -36,62 +39,63 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--fg);
       line-height: 1.6;
       overflow-x: hidden;
     }
 
-    /* Reduced Motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         transition-duration: 0s !important;
         animation-duration: 0s !important;
       }
-      .matrix-column { display: none; }
-      .orbits { animation: none; }
-      .dot { animation: none; }
-      .step { animation: none; opacity: 1; transform: none; }
+      .fade-in { opacity: 1; transform: none; }
     }
 
-    /* Background Pattern - simplified */
-    .bg-pattern {
-      position: fixed;
-      inset: 0;
-      background: 
-        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; }
 
-    /* Noise overlay - simpler */
-    .noise {
+    /* ========== BACKGROUND ANIMATION ========== */
+    .bg-layer {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
       background: 
-        radial-gradient(circle at 20% 20%, transparent 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, transparent 0%, transparent 50%),
-        radial-gradient(circle at 60% 40%, transparent 0%, transparent 50%);
+        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.04) 0%, transparent 50%);
     }
 
-    /* Neon grid - simpler */
-    .neon-grid {
-      position: fixed;
+    .bg-pulse {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+      opacity: 0.3;
+      animation: pulseBg 15s ease-in-out infinite;
+    }
+
+    @keyframes pulseBg {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.4; }
+    }
+
+    .grid-overlay {
+      position: absolute;
       inset: 0;
-      pointer-events: none;
-      z-index: 0;
       background-image: 
-        linear-gradient(rgba(0, 212, 170, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 170, 0.02) 1px, transparent 1px);
-      background-size: 50px 50px;
+        linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: -1;
     }
 
-    /* Navigation */
-    nav {
+    /* ========== NAVIGATION ========== */
+    .header {
       position: fixed;
       top: 2rem;
       left: 50%;
@@ -103,54 +107,28 @@
     }
 
     .nav-link {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: var(--muted);
       text-decoration: none;
       padding: 0.8rem 1.5rem;
-      border-radius: 50px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
+      border-radius: 4px;
       font-family: 'JetBrains Mono', monospace;
-    }
-
-    .nav-link::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .nav-link:hover::before {
-      left: 100%;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
     }
 
     .nav-link:hover {
       color: var(--bg);
       background: var(--accent);
-      box-shadow: 0 8px 30px var(--accent-glow), 0 -8px 30px rgba(168, 85, 247, 0.2);
     }
 
     .nav-link.active {
       color: var(--bg);
-      background: linear-gradient(135deg, var(--accent), var(--purple));
-      box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(168, 85, 247, 0.4);
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
     }
 
-    .nav-link span {
-      display: inline-block;
-      transition: transform 0.3s ease;
-    }
-
-    .nav-link.active span {
-      transform: translateX(5px);
-    }
-
-    /* Sections */
+    /* ========== SECTIONS ========== */
     section {
       padding: 8rem 2rem 4rem;
       min-height: 100vh;
@@ -161,260 +139,90 @@
 
     .section-header {
       text-align: center;
-      max-width: 900px;
-      margin: 0 auto 5rem;
+      max-width: 700px;
+      margin: 0 auto 4rem;
       padding: 2rem;
     }
 
     .section-header h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 4.5rem;
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -3px;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, var(--fg), var(--accent), var(--purple));
+      font-size: 3.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--fg), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: none;
     }
 
     .section-header p {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       color: var(--muted);
       margin-top: 1rem;
     }
 
-    /* Command palette */
-    .command-palette {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
+    /* ========== SECTION 1: INSTALL GIT ========== */
+    .section-install {
+      background: 
+        radial-gradient(ellipse at 50% 0%, var(--bg-secondary) 0%, var(--bg) 100%);
     }
 
-    .command-card {
+    .command-block {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .command-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--cyan), var(--purple));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .command-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-8px) scale(1.01);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), 0 0 40px var(--accent-glow);
-    }
-
-    .command-card:hover::before {
-      opacity: 1;
-    }
-
-    .command-card:active {
-      transform: translateY(-4px) scale(1.01);
-    }
-
-    .command-card:hover .code-block {
-      border-color: var(--accent);
-    }
-
-    .command-title {
-      font-size: 1.5rem;
-      margin-bottom: 1.2rem;
-      color: var(--fg);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .command-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .command-desc {
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.7;
-      margin-bottom: 1.8rem;
-    }
-
-    .command-code {
-      background: var(--bg-secondary);
       border-radius: 12px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      overflow-x: auto;
-      border: 1px solid var(--border);
+      padding: 2rem;
+      margin: 2rem 0;
     }
 
     .code-line {
       display: flex;
       align-items: baseline;
-      gap: 0.4rem;
+      gap: 0.5rem;
       margin: 0.3rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
     }
 
-    .code-keyword { color: var(--cyan); }
-    .code-command { color: var(--accent); }
-    .code-option { color: var(--purple); }
-    .code-path { color: var(--orange); }
-    .code-string { color: var(--gold); }
+    .keyword { color: var(--accent); }
+    .command { color: var(--accent-secondary); }
+    .option { color: #ff6b35; }
+    .path { color: var(--gold); }
+    .string { color: var(--accent); }
 
-    .command-copy {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
+    .command-btn {
       background: transparent;
-      border: none;
+      border: 1px solid var(--border);
       color: var(--muted);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
       font-size: 0.8rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      transition: color 0.3s ease;
+      margin-left: 1rem;
+      transition: all 0.3s ease;
     }
 
-    .command-copy:hover {
-      color: var(--accent);
-    }
-
-    /* Steps section */
-    .steps-section {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .step {
-      margin-bottom: 4rem;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: stepIn 0.8s ease forwards;
-    }
-
-    .step:nth-child(1) { animation-delay: 0.1s; }
-    .step:nth-child(2) { animation-delay: 0.2s; }
-    .step:nth-child(3) { animation-delay: 0.3s; }
-    .step:nth-child(4) { animation-delay: 0.4s; }
-
-    @keyframes stepIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .step-number {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, var(--accent), var(--cyan));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.2rem;
-      font-weight: 400;
+    .command-btn:hover {
+      background: var(--accent);
       color: var(--bg);
-      margin-right: 1.5rem;
-      float: left;
     }
 
-    .step-content {
-      overflow: hidden;
+    /* ========== SECTION 2: REMOTE GITHUB ========== */
+    .section-remote {
+      background: var(--bg-secondary);
     }
 
-    .step-content h3 {
-      font-size: 1.8rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .step-content p {
-      color: var(--muted);
-      font-size: 1.1rem;
-      line-height: 1.8;
-    }
-
-    .step-number span {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--bg);
-      margin-top: 2px;
-    }
-
-    /* Feature highlights */
-    .features-highlight {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .feature-item {
-      margin-bottom: 3rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .feature-item:last-child {
-      border-bottom: none;
-    }
-
-    .feature-icon {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--accent), var(--cyan));
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.2rem;
-      font-size: 1.8rem;
-    }
-
-    .feature-icon i {
-      filter: drop-shadow(0 0 10px var(--accent-glow));
-    }
-
-    .feature-item h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .feature-item p {
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.7;
-    }
-
-    /* CTAs */
-    .cta-section {
-      padding: 8rem 2rem;
+    /* ========== SECTION 3: CTA VSCODE ========== */
+    .section-cta {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
+      padding: 12rem 2rem;
       text-align: center;
     }
 
     .cta-card {
       max-width: 500px;
       margin: 0 auto;
-      background: linear-gradient(135deg, var(--card), var(--bg-secondary));
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 30px;
+      border-radius: 16px;
       padding: 4rem 3rem;
       position: relative;
       overflow: hidden;
@@ -426,356 +234,315 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 100%;
-      background: radial-gradient(circle at 30% 20%, rgba(0, 212, 170, 0.12) 0%, transparent 50%),
-                      radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 50%);
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
     }
 
     .cta-card h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 3.5rem;
+      font-size: 3rem;
       margin-bottom: 1.5rem;
     }
 
     .cta-card p {
       color: var(--muted);
       font-size: 1.4rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 3rem;
     }
 
-    .cta-btns {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
+    .vscode-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1.2rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.3rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      cursor: pointer;
     }
 
-    /* Database animation - simplified */
-    .db-animation {
-      position: fixed;
-      width: 500px;
-      height: 300px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 0;
+    .btn-vscode {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 4px 20px var(--accent-glow), 0 -4px 20px rgba(168, 85, 247, 0.2);
     }
 
-    .db-connection {
-      position: absolute;
+    .btn-vscode:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 30px var(--accent-glow), 0 -8px 30px rgba(168, 85, 247, 0.3);
+    }
+
+    .btn-download {
+      background: var(--card);
+      color: var(--fg);
       border: 2px solid var(--accent);
-      border-radius: 4px;
-      background: linear-gradient(135deg, var(--card), var(--bg-secondary));
-      padding: 1.5rem;
     }
 
-    .db-query {
+    .btn-download:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* ========== FEATURE HIGHLIGHTS ========== */
+    .features {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .feature {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: var(--space-md);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-sm);
+      font-size: 1.5rem;
+    }
+
+    .feature h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      padding: 4rem 2rem 2rem;
       background: var(--bg-secondary);
-      border-radius: 6px;
-      padding: 0.8rem;
-      margin: 0.5rem 0;
-      border-left: 2px solid var(--accent);
+      text-align: center;
     }
 
-    .db-tag {
-      display: inline-block;
-      background: rgba(0, 212, 170, 0.08);
-      color: var(--accent);
-      padding: 0.2rem 0.5rem;
-      border-radius: 3px;
-      font-size: 0.65rem;
-      font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      margin: 0.1rem;
+    .footer p {
+      color: var(--muted);
+      font-size: 1rem;
     }
 
-    /* Focus states */
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 3px;
-    }
-
-    /* Mobile */
+    /* ========== RESPONSIVE ========== */
     @media (max-width: 768px) {
       .nav-link {
         font-size: 1rem;
-        padding: 0.6rem 1.2rem;
+        padding: 0.6rem 1rem;
       }
       
       .section-header h2 {
-        font-size: 3rem;
-      }
-      
-      .command-palette {
-        grid-template-columns: 1fr;
-      }
-      
-      .step-number {
-        float: none;
-        margin-bottom: 1rem;
-        margin-right: 0;
-        width: 50px;
-        height: 50px;
-        font-size: 1.8rem;
-      }
-      
-      .step-content h3 {
-        font-size: 1.5rem;
-      }
-      
-      .cta-card h2 {
         font-size: 2.5rem;
       }
       
-      .cta-btns {
-        flex-direction: column;
-        align-items: center;
+      .cta-card {
+        margin: 0 auto;
+        padding: 3rem 2rem;
       }
       
-      .feature-item {
-        margin-bottom: 2rem;
-        padding-bottom: 2rem;
+      .cta-card h2 {
+        font-size: 2.2rem;
       }
+      
+      .vscode-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* ========== FOCUS STATES ========== */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
     }
   </style>
 </head>
 <body>
-  <!-- Background elements -->
-  <div class="bg-pattern"></div>
-  <div class="noise"></div>
-  <div class="neon-grid"></div>
+  <!-- Background Layer -->
+  <div class="bg-layer">
+    <div class="bg-pulse"></div>
+    <div class="grid-overlay"></div>
+  </div>
 
   <!-- Navigation -->
   <nav>
-    <a href="#install" class="nav-link active"><span>Instalasi Git</span></a>
-    <a href="#remote" class="nav-link"><span>Remote GitHub</span></a>
+    <a href="#install" class="nav-link active">Instalasi</a>
+    <a href="#remote" class="nav-link">Remote</a>
   </nav>
 
-  <!-- Install Section -->
-  <section id="install">
+  <!-- Section 1: Install Git -->
+  <section id="install" class="section-install">
     <div class="section-header">
       <h2>Instalasi Git</h2>
+      <p>Tutorial lengkap menginstal Git di VSCode</p>
     </div>
 
-    <div class="command-palette">
-      <div class="command-card">
-        <div class="code-block">
-          <div class="code-line"><span class="code-command">winget</span> <span class="code-option">install</span> <span class="code-option">--id</span> Git.Git <span class="code-option">-e</span> <span class="code-option">--source</span> winget</div>
-        </div>
-        <h3 class="command-title">Via Windows Package Manager</h3>
-        <p class="command-desc">Instalasi Git terbaru melalui Windows Package Manager (cepat dan resmi).</p>
-        <button class="command-copy">Copy</button>
-      </div>
+    <div class="command-block">
+      <div class="code-line"><span class="keyword">winget</span> <span class="option">install</span> <span class="option">--id</span> Git.Git <span class="option">-e</span> <span class="option">--source</span> winget</div>
+    </div>
 
-      <div class="command-card">
-        <div class="code-block">
-          <div class="code-line">git --version</div>
-        </div>
-        <h3 class="command-title">Verifikasi Versi</h3>
-        <p class="command-desc">Cek apakah Git sudah terinstall dengan benar.</p>
-      </div>
+    <div class="command-block">
+      <div class="code-line">git --version</div>
+    </div>
 
-      <div class="command-card">
-        <div class="code-block">
-          <div class="code-line">git config --global user.name "<span class="code-string">Nama Anda</span>"</div>
-          <div class="code-line">git config --global user.email "email@anda.com"</div>
-        </div>
-        <h3 class="command-title">Konfigurasi Awal</h3>
-        <p class="command-desc">Setel nama dan email global untuk commit Git.</p>
-      </div>
+    <div class="command-block">
+      <div class="code-line">git config --global user.name "<span class="string">Nama Anda</span>"</div>
+      <div class="code-line">git config --global user.email "email@anda.com"</div>
     </div>
   </section>
 
-  <!-- Remote Section -->
-  <section id="remote">
+  <!-- Section 2: Remote GitHub -->
+  <section id="remote" class="section-remote">
     <div class="section-header">
       <h2>Remote Project ke GitHub</h2>
+      <p>Meremotte project lokal ke repository GitHub via VSCode terminal</p>
     </div>
 
-    <div class="command-palette">
-      <div class="command-card">
-        <div class="code-block">
-          <div class="code-line">git init</div>
-        </div>
-        <h3 class="command-title">Inisialisasi Repo</h3>
-        <p class="command-desc">Membuat repository Git lokal baru.</p>
-      </div>
+    <div class="command-block">
+      <div class="code-line">git init</div>
+    </div>
 
-      <div class="command-card">
-        <div class="code-block">
-          <div class="code-line">git add .</div>
-        </div>
-        <h3 class="command-title">Add Files</h3>
-        <p class="command-desc">Menyiapkan semua file untuk commit.</p>
-      </div>
+    <div class="command-block">
+      <div class="code-line">git add .</div>
+    </div>
 
-      <div class="command-card">
-        <div class="code-block">
-          <div class="code-line">git commit -m <span class="code-string">"project"</span></div>
-        </div>
-        <h3 class="command-title">Commit Perubahan</h3>
-        <p class="command-desc">Simpan perubahan dengan pesan "project".</p>
-      </div>
+    <div class="command-block">
+      <div class="code-line">git commit -m <span class="string">"project"</span></div>
+    </div>
 
-      <div class="command-card">
-        <div class="code-block">
-          <div class="code-line">git branch -M main</div>
-          <div class="code-line">git remote add origin "nama repo github"</div>
-          <div class="code-line">git push -u origin main</div>
-        </div>
-        <h3 class="command-title">Git Flow Lengkap</h3>
-        <p class="command-desc">Connect proyek lokal ke remote repository GitHub.</p>
+    <div class="command-block">
+      <div class="code-line">git branch -M main</div>
+      <div class="code-line">git remote add origin "nama repo github"</div>
+      <div class="code-line">git push -u origin main</div>
+    </div>
+  </section>
+
+  <!-- Section 3: CTA VSCode -->
+  <section id="cta" class="section-cta">
+    <div class="cta-card">
+      <h2>Buka VSCode Anda</h2>
+      <p>Sudah memiliki VSCode? Klik di bawah ini untuk memulai, atau unduh versi terbaru.</p>
+      
+      <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+        <button class="vscode-btn btn-vscode">
+          <span>Buka VSCode</span>
+        </button>
+        <button class="vscode-btn btn-download">
+          <span>Unduh VSCode</span>
+        </button>
       </div>
     </div>
   </section>
 
   <!-- Features Highlights -->
-  <section style="max-width: 1100px; margin: 0 auto; padding: 6rem 2rem;">
-    <div class="features-highlight">
-      <div class="feature-item">
+  <section style="max-width: 900px; margin: 0 auto; padding: 6rem 2rem;">
+    <div class="features">
+      <div class="feature">
         <div class="feature-icon">📁</div>
-        <div class="feature-content">
+        <div>
           <h3>Pengelolaan Proyek</h3>
-          <p>Alat lengkap untuk melacak progres, milestone, dan kolaborasi tim pengembangan perangkat lunak modern.</p>
+          <p>Alat lengkap untuk melacak progres, milestone, dan kolaborasi tim.</p>
         </div>
       </div>
 
-      <div class="feature-item">
+      <div class="feature">
         <div class="feature-icon">💻</div>
-        <div class="feature-content">
-          <h3>Editor Code Terintegrasi</h3>
-          <p>Edit, debug, dan commit langsung dari interface tanpa perlu keluar dari terminal.</p>
+        <div>
+          <h3>Integrasi VSCode</h3>
+          <p>Workflow pengembangan yang mulus dari editor ke terminal.</p>
         </div>
       </div>
 
-      <div class="feature-item">
+      <div class="feature">
         <div class="feature-icon">🌐</div>
-        <div class="feature-content">
-          <h3>Cloud Terminal</h3>
-          <p>Akses terminal dari mana saja dengan berbagai bahasa pemrograman dan database terintegrasi.</p>
+        <div>
+          <h3>Git & GitHub</h3>
+          <p>Manajemen repository dan remote hosting yang intuitif.</p>
         </div>
-      </div>
-
-      <div class="feature-item">
-        <div class="feature-icon">📊</div>
-        <div class="feature-content">
-          <h3>Repository Analytics</h3>
-          <p>Lihat statistik push, commit, dan aktivitas contributors dalam real-time.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="cta-section">
-    <div class="cta-card">
-      <h2>Mulai Journey Git Anda</h2>
-      <p>Dapatkan akses segera ke tutorial lengkap, fitur premium, dan komunitas developer.</p>
-      <div class="cta-btns">
-        <button class="btn" style="background: var(--accent); color: var(--bg);">Daftar Gratis</button>
-        <button class="btn-secondary">Lihat Dokumentasi</button>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer style="padding: 4rem 2rem 2rem; background: var(--bg-secondary);">
-    <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
-      <p>2024 Git & GitHub Premium Tutorial • Dibuat dengan teknologi modern untuk developer</p>
-    </div>
+  <footer>
+    <p>2024 Git & VSCode Premium Tutorial • Dibuat untuk developer modern</p>
   </footer>
 
   <script>
-    // Initialize Matrix Rain - optimized with limited columns
-    function initMatrixRain() {
-      const matrixRain = document.getElementById('matrix-rain');
-      if (!matrixRain) return;
-      
-      // Remove existing columns first
-      matrixRain.innerHTML = '';
-      
-      const chars = '01';
-      // Limited columns based on viewport width
-      const columnCount = Math.min(30, Math.floor(window.innerWidth / 25));
-      const maxRows = Math.max(10, Math.floor(window.innerHeight / 20) + 2);
-      
-      for (let i = 0; i < columnCount; i++) {
-        const column = document.createElement('div');
-        column.className = 'matrix-column';
-        column.style.left = (i * 25) + 'px';
-        column.style.width = '20px';
-        column.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        column.style.opacity = (Math.random() * 0.3 + 0.3).toString(16).substring(2) / 5 + 0.2;
+    // VSCode Detection & Launch Logic
+    const vscodeBtn = document.querySelector('.btn-vscode');
+    
+    if (vscodeBtn) {
+      vscodeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         
-        const text = [];
-        for (let j = 0; j < maxRows; j++) {
-          text.push(chars[Math.floor(Math.random() * chars.length)]);
+        // Check if VSCode is installed by checking if 'code' command exists
+        const isVscodeInstalled = async () => {
+          try {
+            // Try to execute 'code' command
+            await navigator.mediaDevices.getUserMedia({ audio: false, video: false });
+            // If we get here, the environment supports command execution checks
+            // In practice, we check if VSCode is in the system PATH
+            const result = await window.electron?.ipcRenderer?.send?.('check-vscode') 
+              || false;
+            return result || false;
+          } catch (err) {
+            return false;
+          }
+        };
+        
+        // Fallback: Check via Path (simplified)
+        const checkVscodePath = () => {
+          // Common VSCode installation paths
+          const possiblePaths = [
+            process.platform === 'win32' ? 'C:\\Program Files\\Microsoft VS Code\\code.exe' 
+              : process.platform === 'darwin' ? '/Applications/Visual Studio Code.app/Contents/Resources/app/code'
+              : '/usr/local/bin/code',
+            process.platform === 'win32' ? 'C:\\Users\\' + process.env.USERNAME + '\\AppData\\Local\\Programs\\Microsoft VS Code\\code.exe'
+              : undefined
+          ];
+          
+          // For browser environment, we'll just redirect to download
+          return false;
+        };
+        
+        // Show download option since we can't reliably detect VSCode in browser
+        window.location.href = 'https://code.visualstudio.com/';
+      });
+    }
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoBehavior({ smooth: true });
         }
-        column.innerHTML = text.join('<br>');
-        matrixRain.appendChild(column);
-      }
-    }
-
-    // Initialize Data Points - reduced count
-    function initDataPoints() {
-      const dataPoints = document.getElementById('data-points');
-      if (!dataPoints) return;
-      
-      dataPoints.innerHTML = '';
-      
-      const count = Math.min(12, Math.floor(window.innerWidth / 80));
-      
-      for (let i = 0; i < count; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'dot';
-        dot.style.left = (Math.random() * 100) + '%';
-        dot.style.top = (Math.random() * 100) + '%';
-        dot.style.animationDuration = (Math.random() * 3 + 5) + 's';
-        dot.style.animationDelay = (Math.random() * 3) + 's';
-        dataPoints.appendChild(dot);
-      }
-    }
-
-    // Initialize Orbits - simpler
-    function initOrbits() {
-      const orbits = document.querySelector('.orbits');
-      if (!orbits) return;
-      
-      orbits.style.width = Math.max(150, window.innerWidth * 0.3) + 'px';
-      orbits.style.height = Math.max(150, window.innerWidth * 0.3) + 'px';
-    }
-
-    // Database connection animation - simplified
-    function initDBAnimation() {
-      const dbAnimation = document.querySelector('.db-animation');
-      if (!dbAnimation) return;
-      
-      const connection = dbAnimation.querySelector('.db-connection');
-      if (!connection) return;
-      
-      // Simple float animation
-      connection.style.animation = 'dbConnect 3s ease-in-out infinite';
-    }
-
-    // Command copy functionality - optimized
-    document.querySelectorAll('.command-copy').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const codeBlock = this.parentElement.querySelector('.code-block');
-        if (!codeBlock) return;
-        const text = codeBlock.innerText;
-        if (!text) return;
-        navigator.clipboard.writeText(text).then(() => {
-          this.textContent = 'Copied!';
-          setTimeout(() => this.textContent = 'Copy', 1500);
-        });
       });
     });
 
-    // Scroll reveal with Intersection Observer - more efficient
+    // Scroll reveal with Intersection Observer
     const observerOptions = {
       threshold: 0.15,
-      rootMargin: '0px 0px -30px 0px'
+      rootMargin: '0px 0px -20px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -789,75 +556,28 @@
       });
     }, observerOptions);
 
-    document.querySelectorAll('.command-card, .step, .feature-item').forEach(el => {
+    document.querySelectorAll('.command-block, .feature').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
       el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       observer.observe(el);
     });
 
-    // Nav link active state
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section');
+    // Pulsing background effect
+    setInterval(() => {
+      const pulse = document.querySelector('.bg-pulse');
+      if (pulse) {
+        pulse.style.opacity = pulse.style.opacity === '0.3' ? '0.2' : '0.3';
+      }
+    }, 7000);
 
-    const scrollObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navLinks.forEach(link => link.classList.remove('active'));
-          const id = entry.target.getAttribute('id');
-          const matchingLink = document.querySelector('.nav-link[href*=' + id + ']');
-          if (matchingLink) matchingLink.classList.add('active');
-        }
-      });
-    }, { threshold: 0.3 });
-
-    sections.forEach(section => scrollObserver.observe(section));
-
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoBehavior({ smooth: true });
-        }
-      });
-    });
-
-    // Cursor trail - throttled and limited
-    let trailTimeout = null;
-    document.addEventListener('mousemove', (e) => {
-      // Remove existing trail
-      const existing = document.querySelector('.cursor-trail');
-      if (existing) existing.remove();
-      
-      const trail = document.createElement('div');
-      trail.className = 'cursor-trail';
-      trail.style.left = e.clientX + 'px';
-      trail.style.top = e.clientY + 'px';
-      document.body.appendChild(trail);
-      setTimeout(() => trail.remove(), 800);
-    }, { passive: true });
-
-    // Initialize on load - deferred for better performance
-    window.addEventListener('load', () => {
-      // Small delay to allow page content to render first
-      setTimeout(() => {
-        initMatrixRain();
-        initDataPoints();
-        initOrbits();
-        initDBAnimation();
-      }, 200);
-    });
-
-    // Resize handling - throttled
-    let resizeTimeout = null;
-    window.addEventListener('resize', () => {
-      if (!resizeTimeout) {
-        resizeTimeout = setTimeout(() => {
-          resizeTimeout = null;
-          initMatrixRain();
-        }, 100);
+    // Dynamic background color shift on user interaction
+    let interactionCount = 0;
+    document.addEventListener('click', () => {
+      interactionCount++;
+      if (interactionCount > 3) {
+        document.body.style.background = 
+          'linear-gradient(135deg, #0a0a1a 0%, #121225 100%)';
       }
     });
   </script>
