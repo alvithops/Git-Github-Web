@@ -160,11 +160,12 @@
 
     .hero h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 4.5rem;
+      font-size: 4rem;
       font-weight: 900;
       line-height: 1.1;
-      letter-spacing: -2px;
+      letter-spacing: -1px;
       margin-bottom: 1.5rem;
+      color: var(--fg);
     }
 
     .hero h1 span {
@@ -175,10 +176,11 @@
     }
 
     .hero p {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       color: var(--muted);
       max-width: 600px;
       margin: 0 auto;
+      line-height: 1.6;
     }
 
     /* ========== SECTIONS ========== */
@@ -241,9 +243,12 @@
       border-radius: 12px;
       padding: 2rem;
       overflow-x: auto;
+      overflow-scrolling: touch;
       font-family: 'Source Code Pro', monospace;
       font-size: 0.9rem;
+      line-height: 1.5;
       margin-bottom: 1.5rem;
+      color: var(--fg);
     }
 
     .code-line {
@@ -270,11 +275,18 @@
       margin-left: 1rem;
       transition: all 0.3s ease;
       cursor: pointer;
+      min-width: 60px;
+      white-space: nowrap;
     }
 
     .copy-btn:hover {
       background: var(--accent);
       color: var(--bg);
+    }
+
+    .copy-btn:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
     }
 
     /* ========== COMMAND ROWS ========== */
@@ -373,26 +385,55 @@
     @media (max-width: 768px) {
       .hero h1 { font-size: 3rem; }
       .hero p { font-size: 1.3rem; }
+      .hero-badge { font-size: 0.75rem; }
       
       .section-title h2 { font-size: 2.5rem; }
       .section-title p { font-size: 1.1rem; }
       
-      .code-block { padding: 1.5rem; font-size: 0.8rem; }
-      .command-group h3 { font-size: 1.5rem; }
+      .code-block {
+        padding: 1.5rem;
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+      }
+      .command-group h3 { font-size: 1.5rem; margin-bottom: 1rem; }
       
-      .features { grid-template-columns: 1fr; }
+      .command-rows { grid-template-columns: 1fr; gap: 1.5rem; }
+      .command-card { padding: 1.5rem; }
+      .command-card h4 { font-size: 1.1rem; }
+      .command-card p { font-size: 0.85rem; }
+      
+      .features { grid-template-columns: 1fr; gap: var(--space-sm); }
       .feature { padding: var(--space-sm); }
       .feature-icon { width: 24px; height: 24px; font-size: 1rem; }
+      .feature h3 { font-size: 1rem; }
+      .feature p { font-size: 0.8rem; }
     }
 
     @media (max-width: 480px) {
       .hero h1 { font-size: 2.5rem; }
-      .hero-badge { padding: 0.5rem 1rem; font-size: 0.7rem; }
+      .hero p { font-size: 1.1rem; }
+      .hero-badge { padding: 0.4rem 0.8rem; font-size: 0.65rem; }
       
       .section-title h2 { font-size: 2rem; }
-      .section-title p { font-size: 1rem; }
+      .section-title p { font-size: 0.95rem; }
       
       .code-block { padding: 1rem; font-size: 0.75rem; }
+      .command-group h3 { font-size: 1.3rem; }
+      
+      .command-card { padding: 1rem; }
+      .command-card h4 { font-size: 1rem; }
+      .command-card p { font-size: 0.8rem; }
+      
+      .features { gap: var(--space-xs); }
+      .feature { padding: var(--space-xs); }
+      .feature-icon { width: 20px; height: 20px; font-size: 0.85rem; }
+      .feature h3 { font-size: 0.9rem; }
+      .feature p { font-size: 0.75rem; }
+    }
+
+    /* Ensure code blocks are readable on mobile */
+    @media (max-width: 768px) {
+      .code-block { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     }
   </style>
 </head>
@@ -494,7 +535,39 @@
         
         navigator.clipboard.writeText(text).then(() => {
           this.textContent = 'Copied!';
+          // Create temporary feedback element
+          const feedback = document.createElement('span');
+          feedback.textContent = 'Copied!';
+          feedback.style.position = 'fixed';
+          feedback.style.bottom = '2rem';
+          feedback.style.left = '50%';
+          feedback.style.transform = 'translateX(-50%)';
+          feedback.style.background = 'var(--accent)';
+          feedback.style.color = 'var(--bg)';
+          feedback.style.padding = '0.5rem 1rem';
+          feedback.style.borderRadius = '6px';
+          feedback.style.fontSize = '0.8rem';
+          feedback.style.zIndex = '1000';
+          document.body.appendChild(feedback);
+          setTimeout(() => feedback.remove(), 1500);
           setTimeout(() => this.textContent = 'Copy', 1500);
+        }).catch(() => {
+          // Fallback for browsers without clipboard support
+          const textArea = document.createElement('textarea');
+          textArea.value = text;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-9999px';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            this.textContent = 'Copied!';
+          } catch (err) {
+            this.textContent = 'Failed';
+          }
+          setTimeout(() => this.textContent = 'Copy', 1500);
+          document.body.removeChild(textArea);
         });
       });
     });
@@ -543,503 +616,4 @@
     });
   </script>
 </body>
-</html>ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
-ke
+</html>
