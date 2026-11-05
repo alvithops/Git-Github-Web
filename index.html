@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Git & VSCode Premium Tutorial</title>
+  <title>Git & GitHub - Premium Tutorial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@400,700;400,900&family=Source+Code+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     /* ========== CSS VARIABLES ========== */
     :root {
-      --bg: #0a0a1a;
-      --bg-secondary: #101025;
-      --fg: #e8e8f0;
-      --muted: #5a5a7a;
-      --accent: #00d4aa;
-      --accent-secondary: #a855f7;
-      --card: #131328;
-      --border: #2a2a4a;
+      --bg: #0d0d0d;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #252525;
+      --fg: #f5f5f0;
+      --muted: #a0a0a0;
+      --accent: #00e5a0;
+      --accent-glow: rgba(0, 229, 160, 0.4);
+      --purple: #a855f7;
       --gold: #ffd700;
+      --white: #ffffff;
       --space-xs: 0.5rem;
       --space-sm: 1rem;
       --space-md: 1.5rem;
       --space-lg: 2rem;
-      --space-xl: 3rem;
     }
 
-    /* ========== RESET & BASE ========== */
+    /* ========== RESET ========== */
     * {
       margin: 0;
       padding: 0;
@@ -39,7 +39,7 @@
     }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Source Code Pro', monospace;
       background: var(--bg);
       color: var(--fg);
       line-height: 1.6;
@@ -51,102 +51,151 @@
         transition-duration: 0s !important;
         animation-duration: 0s !important;
       }
-      .fade-in { opacity: 1; transform: none; }
     }
 
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; }
 
     /* ========== BACKGROUND ANIMATION ========== */
-    .bg-layer {
+    .bg-canvas {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
-      background: 
-        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.04) 0%, transparent 50%);
     }
 
-    .bg-pulse {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-      opacity: 0.3;
-      animation: pulseBg 15s ease-in-out infinite;
-    }
-
-    @keyframes pulseBg {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
-      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.4; }
-    }
-
-    .grid-overlay {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    /* ========== NAVIGATION ========== */
-    .header {
+    /* Moving neon lines background */
+    .neon-lines {
       position: fixed;
-      top: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      display: flex;
-      gap: 2rem;
-      padding: 0 2rem;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .nav-link {
-      font-size: 1.2rem;
-      color: var(--muted);
-      text-decoration: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 4px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-      transition: all 0.3s ease;
+    .line {
+      position: absolute;
+      border-left: 1px solid var(--accent);
+      opacity: 0.6;
+    }
+
+    .line-1 { width: 2px; animation: line1 20s linear infinite; top: 20%; left: -2px; }
+    .line-2 { width: 1.5px; animation: line2 25s linear infinite; top: 50%; left: 30%; }
+    .line-3 { width: 2.5px; animation: line3 18s linear infinite; top: 80%; left: 60%; }
+    .line-4 { width: 1px; animation: line4 30s linear infinite; bottom: 10%; left: 15%; }
+
+    @keyframes line1 { to { transform: translateX(100vw); } }
+    @keyframes line2 { to { transform: translateX(100vw); } }
+    @keyframes line3 { to { transform: translateX(100vw); } }
+    @keyframes line4 { to { transform: translateX(100vw); } }
+
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(20px);
+      opacity: 0.5;
+      animation: floatOrb 8s ease-in-out infinite;
+    }
+
+    .orb-1 { width: 100px; height: 100px; background: var(--accent); top: -50%; left: -50%; animation-delay: 0s; }
+    .orb-2 { width: 80px; height: 80px; background: var(--purple); top: 60%; left: 80%; animation-delay: 2s; }
+    .orb-3 { width: 120px; height: 120px; background: #ff6b35; bottom: -60%; right: -60%; animation-delay: 4s; }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    /* Grid pattern overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: 
+        linear-gradient(rgba(0, 229, 160, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 160, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ========== MAIN CONTENT ========== */
+    .main-content {
       position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
     }
 
-    .nav-link:hover {
-      color: var(--bg);
-      background: var(--accent);
+    /* ========== HEADER/HERO ========== */
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem 2rem;
+      margin-bottom: 4rem;
     }
 
-    .nav-link.active {
-      color: var(--bg);
-      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 229, 160, 0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge span {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--fg), var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.6rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     /* ========== SECTIONS ========== */
     section {
-      padding: 8rem 2rem 4rem;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 4rem 2rem;
+      margin-bottom: 4rem;
     }
 
-    .section-header {
+    .section-title {
       text-align: center;
-      max-width: 700px;
-      margin: 0 auto 4rem;
-      padding: 2rem;
+      margin-bottom: 3rem;
     }
 
-    .section-header h2 {
+    .section-title h2 {
+      font-family: 'Playfair Display', serif;
       font-size: 3.5rem;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 1rem;
       background: linear-gradient(135deg, var(--fg), var(--accent));
       -webkit-background-clip: text;
@@ -154,148 +203,127 @@
       background-clip: text;
     }
 
-    .section-header p {
-      font-size: 1.4rem;
+    .section-title p {
+      font-size: 1.3rem;
       color: var(--muted);
-      margin-top: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
     }
 
-    /* ========== SECTION 1: INSTALL GIT ========== */
-    .section-install {
-      background: 
-        radial-gradient(ellipse at 50% 0%, var(--bg-secondary) 0%, var(--bg) 100%);
+    /* ========== GIT COMMANDS ========== */
+    .commands-grid {
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      border: 1px solid var(--bg-tertiary);
     }
 
-    .command-block {
-      background: var(--card);
-      border: 1px solid var(--border);
+    .command-group {
+      margin-bottom: 2.5rem;
+    }
+
+    .command-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .command-group h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--bg-tertiary);
+    }
+
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--bg-tertiary);
       border-radius: 12px;
       padding: 2rem;
-      margin: 2rem 0;
+      overflow-x: auto;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
     }
 
     .code-line {
       display: flex;
       align-items: baseline;
-      gap: 0.5rem;
+      gap: 0.4rem;
       margin: 0.3rem 0;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
     }
 
-    .keyword { color: var(--accent); }
-    .command { color: var(--accent-secondary); }
-    .option { color: #ff6b35; }
-    .path { color: var(--gold); }
+    .keyword { color: #ff6b35; }
+    .command { color: var(--accent); }
+    .option { color: #ffd700; }
+    .path { color: var(--purple); }
     .string { color: var(--accent); }
 
-    .command-btn {
+    .copy-btn {
       background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
+      border: 1px solid var(--accent);
+      color: var(--accent);
       padding: 0.5rem 1rem;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
+      font-family: 'Source Code Pro', monospace;
       margin-left: 1rem;
       transition: all 0.3s ease;
-    }
-
-    .command-btn:hover {
-      background: var(--accent);
-      color: var(--bg);
-    }
-
-    /* ========== SECTION 2: REMOTE GITHUB ========== */
-    .section-remote {
-      background: var(--bg-secondary);
-    }
-
-    /* ========== SECTION 3: CTA VSCODE ========== */
-    .section-cta {
-      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
-      padding: 12rem 2rem;
-      text-align: center;
-    }
-
-    .cta-card {
-      max-width: 500px;
-      margin: 0 auto;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 4rem 3rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-    }
-
-    .cta-card h2 {
-      font-size: 3rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .cta-card p {
-      color: var(--muted);
-      font-size: 1.4rem;
-      margin-bottom: 3rem;
-    }
-
-    .vscode-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.8rem;
-      padding: 1.2rem 2.5rem;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 1.3rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: none;
       cursor: pointer;
     }
 
-    .btn-vscode {
+    .copy-btn:hover {
       background: var(--accent);
       color: var(--bg);
-      box-shadow: 0 4px 20px var(--accent-glow), 0 -4px 20px rgba(168, 85, 247, 0.2);
     }
 
-    .btn-vscode:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 8px 30px var(--accent-glow), 0 -8px 30px rgba(168, 85, 247, 0.3);
+    /* ========== COMMAND ROWS ========== */
+    .command-rows {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
     }
 
-    .btn-download {
-      background: var(--card);
+    .command-card {
+      background: var(--bg);
+      border: 1px solid var(--bg-tertiary);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .command-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .command-card .code-block {
+      margin: 1rem 0;
+    }
+
+    .command-card h4 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
       color: var(--fg);
-      border: 2px solid var(--accent);
     }
 
-    .btn-download:hover {
-      background: var(--accent);
-      color: var(--bg);
+    .command-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
     }
 
     /* ========== FEATURE HIGHLIGHTS ========== */
     .features {
-      max-width: 900px;
-      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--space-md);
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-sm);
+      margin-top: 3rem;
     }
 
     .feature {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      border: 1px solid var(--bg-tertiary);
       border-radius: 12px;
       padding: var(--space-md);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -307,239 +335,190 @@
     }
 
     .feature-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-      border-radius: 10px;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: var(--space-sm);
-      font-size: 1.5rem;
+      font-size: 1.3rem;
     }
 
     .feature h3 {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       margin-bottom: 0.3rem;
     }
 
     .feature p {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       line-height: 1.5;
     }
 
     /* ========== FOOTER ========== */
     footer {
-      padding: 4rem 2rem 2rem;
+      padding: 3rem 2rem 1rem;
       background: var(--bg-secondary);
       text-align: center;
     }
 
     .footer p {
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     /* ========== RESPONSIVE ========== */
     @media (max-width: 768px) {
-      .nav-link {
-        font-size: 1rem;
-        padding: 0.6rem 1rem;
-      }
+      .hero h1 { font-size: 3rem; }
+      .hero p { font-size: 1.3rem; }
       
-      .section-header h2 {
-        font-size: 2.5rem;
-      }
+      .section-title h2 { font-size: 2.5rem; }
+      .section-title p { font-size: 1.1rem; }
       
-      .cta-card {
-        margin: 0 auto;
-        padding: 3rem 2rem;
-      }
+      .code-block { padding: 1.5rem; font-size: 0.8rem; }
+      .command-group h3 { font-size: 1.5rem; }
       
-      .cta-card h2 {
-        font-size: 2.2rem;
-      }
-      
-      .vscode-btn {
-        width: 100%;
-        justify-content: center;
-      }
+      .features { grid-template-columns: 1fr; }
+      .feature { padding: var(--space-sm); }
+      .feature-icon { width: 24px; height: 24px; font-size: 1rem; }
     }
 
-    /* ========== FOCUS STATES ========== */
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 2px;
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2.5rem; }
+      .hero-badge { padding: 0.5rem 1rem; font-size: 0.7rem; }
+      
+      .section-title h2 { font-size: 2rem; }
+      .section-title p { font-size: 1rem; }
+      
+      .code-block { padding: 1rem; font-size: 0.75rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Background Layer -->
-  <div class="bg-layer">
-    <div class="bg-pulse"></div>
+  <!-- Background Animation -->
+  <div class="bg-canvas">
+    <div class="neon-lines">
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+      <div class="line line-3"></div>
+      <div class="line line-4"></div>
+    </div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
     <div class="grid-overlay"></div>
   </div>
 
-  <!-- Navigation -->
-  <nav>
-    <a href="#install" class="nav-link active">Instalasi</a>
-    <a href="#remote" class="nav-link">Remote</a>
-  </nav>
-
-  <!-- Section 1: Install Git -->
-  <section id="install" class="section-install">
-    <div class="section-header">
-      <h2>Instalasi Git</h2>
-      <p>Tutorial lengkap menginstal Git di VSCode</p>
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-badge"><span>IT Tutorial</span></div>
+      <h1>Git & <span>GitHub</span></h1>
+      <p>Tutorial premium pengembangan perangkat lunak dengan desain mewah dan struktur yang jelas</p>
     </div>
 
-    <div class="command-block">
-      <div class="code-line"><span class="keyword">winget</span> <span class="option">install</span> <span class="option">--id</span> Git.Git <span class="option">-e</span> <span class="option">--source</span> winget</div>
-    </div>
+    <!-- Section: Instalasi Git -->
+    <section id="install">
+      <div class="commands-grid">
+        <div class="command-group">
+          <h3>Instalasi Git</h3>
+          <div class="code-block">
+            <div class="code-line"><span class="keyword">winget</span> <span class="option">install</span> <span class="option">--id</span> Git.Git <span class="option">-e</span> <span class="option">--source</span> winget</div>
+          </div>
+          <div class="code-block">
+            <div class="code-line">git --version</div>
+          </div>
+          <div class="code-block">
+            <div class="code-line">git config --global user.name "<span class="string">Nama Anda</span>"</div>
+            <div class="code-line">git config --global user.email "email@anda.com"</div>
+          </div>
+        </div>
 
-    <div class="command-block">
-      <div class="code-line">git --version</div>
-    </div>
-
-    <div class="command-block">
-      <div class="code-line">git config --global user.name "<span class="string">Nama Anda</span>"</div>
-      <div class="code-line">git config --global user.email "email@anda.com"</div>
-    </div>
-  </section>
-
-  <!-- Section 2: Remote GitHub -->
-  <section id="remote" class="section-remote">
-    <div class="section-header">
-      <h2>Remote Project ke GitHub</h2>
-      <p>Meremotte project lokal ke repository GitHub via VSCode terminal</p>
-    </div>
-
-    <div class="command-block">
-      <div class="code-line">git init</div>
-    </div>
-
-    <div class="command-block">
-      <div class="code-line">git add .</div>
-    </div>
-
-    <div class="command-block">
-      <div class="code-line">git commit -m <span class="string">"project"</span></div>
-    </div>
-
-    <div class="command-block">
-      <div class="code-line">git branch -M main</div>
-      <div class="code-line">git remote add origin "nama repo github"</div>
-      <div class="code-line">git push -u origin main</div>
-    </div>
-  </section>
-
-  <!-- Section 3: CTA VSCode -->
-  <section id="cta" class="section-cta">
-    <div class="cta-card">
-      <h2>Buka VSCode Anda</h2>
-      <p>Sudah memiliki VSCode? Klik di bawah ini untuk memulai, atau unduh versi terbaru.</p>
-      
-      <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-        <button class="vscode-btn btn-vscode">
-          <span>Buka VSCode</span>
-        </button>
-        <button class="vscode-btn btn-download">
-          <span>Unduh VSCode</span>
-        </button>
+        <div class="command-group">
+          <h3>Remote GitHub</h3>
+          <div class="code-block">
+            <div class="code-line">git init</div>
+          </div>
+          <div class="code-block">
+            <div class="code-line">git add .</div>
+          </div>
+          <div class="code-block">
+            <div class="code-line">git commit -m <span class="string">"project"</span></div>
+          </div>
+          <div class="code-block">
+            <div class="code-line">git branch -M main</div>
+            <div class="code-line">git remote add origin "nama repo github"</div>
+            <div class="code-line">git push -u origin main</div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Features Highlights -->
-  <section style="max-width: 900px; margin: 0 auto; padding: 6rem 2rem;">
+    <!-- Features -->
     <div class="features">
       <div class="feature">
         <div class="feature-icon">📁</div>
-        <div>
-          <h3>Pengelolaan Proyek</h3>
-          <p>Alat lengkap untuk melacak progres, milestone, dan kolaborasi tim.</p>
-        </div>
+        <h3>Pengelolaan</h3>
+        <p>Alat lengkap untuk tracking progres dan kolaborasi tim development.</p>
       </div>
-
       <div class="feature">
         <div class="feature-icon">💻</div>
-        <div>
-          <h3>Integrasi VSCode</h3>
-          <p>Workflow pengembangan yang mulus dari editor ke terminal.</p>
-        </div>
+        <h3>Editor Integrasi</h3>
+        <p>Workflow pengembangan mulus dari code ke deployment.</p>
       </div>
-
       <div class="feature">
         <div class="feature-icon">🌐</div>
-        <div>
-          <h3>Git & GitHub</h3>
-          <p>Manajemen repository dan remote hosting yang intuitif.</p>
-        </div>
+        <h3>Git Flow</h3>
+        <p>Branch management dan remote synchronization yang intuitif.</p>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- Footer -->
   <footer>
-    <p>2024 Git & VSCode Premium Tutorial • Dibuat untuk developer modern</p>
+    <p>2024 Git & GitHub Premium Tutorial • Desain Modern untuk Developer</p>
   </footer>
 
   <script>
-    // VSCode Detection & Launch Logic
-    const vscodeBtn = document.querySelector('.btn-vscode');
-    
-    if (vscodeBtn) {
-      vscodeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+    // Copy to clipboard functionality
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const codeBlock = this.parentElement.querySelector('.code-block');
+        if (!codeBlock) return;
+        const text = codeBlock.innerText.trim();
+        if (!text) return;
         
-        // Check if VSCode is installed by checking if 'code' command exists
-        const isVscodeInstalled = async () => {
-          try {
-            // Try to execute 'code' command
-            await navigator.mediaDevices.getUserMedia({ audio: false, video: false });
-            // If we get here, the environment supports command execution checks
-            // In practice, we check if VSCode is in the system PATH
-            const result = await window.electron?.ipcRenderer?.send?.('check-vscode') 
-              || false;
-            return result || false;
-          } catch (err) {
-            return false;
-          }
-        };
-        
-        // Fallback: Check via Path (simplified)
-        const checkVscodePath = () => {
-          // Common VSCode installation paths
-          const possiblePaths = [
-            process.platform === 'win32' ? 'C:\\Program Files\\Microsoft VS Code\\code.exe' 
-              : process.platform === 'darwin' ? '/Applications/Visual Studio Code.app/Contents/Resources/app/code'
-              : '/usr/local/bin/code',
-            process.platform === 'win32' ? 'C:\\Users\\' + process.env.USERNAME + '\\AppData\\Local\\Programs\\Microsoft VS Code\\code.exe'
-              : undefined
-          ];
-          
-          // For browser environment, we'll just redirect to download
-          return false;
-        };
-        
-        // Show download option since we can't reliably detect VSCode in browser
-        window.location.href = 'https://code.visualstudio.com/';
-      });
-    }
-
-    // Smooth scroll for nav links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoBehavior({ smooth: true });
-        }
+        navigator.clipboard.writeText(text).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 1500);
+        });
       });
     });
 
-    // Scroll reveal with Intersection Observer
+    // Pulsing background orb animation
+    setInterval(() => {
+      const orbs = document.querySelectorAll('.orb');
+      orbs.forEach((orb, index) => {
+        const currentOpacity = parseFloat(orb.style.opacity);
+        orb.style.opacity = currentOpacity === 0.5 ? 0.3 : 0.5;
+      });
+    }, 3000);
+
+    // Subtle background color shift on user interaction
+    let interactions = 0;
+    document.addEventListener('click', () => {
+      interactions++;
+      if (interactions > 5) {
+        document.body.style.background = 
+          'linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%)';
+      }
+    });
+
+    // Scroll reveal
     const observerOptions = {
       threshold: 0.15,
       rootMargin: '0px 0px -20px 0px'
@@ -550,35 +529,17 @@
         if (entry.isIntersecting) {
           setTimeout(() => {
             entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            entry.target.transform = 'translateY(0)';
           }, index * 100);
         }
       });
     }, observerOptions);
 
-    document.querySelectorAll('.command-block, .feature').forEach(el => {
+    document.querySelectorAll('.command-group, .feature').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
       el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       observer.observe(el);
-    });
-
-    // Pulsing background effect
-    setInterval(() => {
-      const pulse = document.querySelector('.bg-pulse');
-      if (pulse) {
-        pulse.style.opacity = pulse.style.opacity === '0.3' ? '0.2' : '0.3';
-      }
-    }, 7000);
-
-    // Dynamic background color shift on user interaction
-    let interactionCount = 0;
-    document.addEventListener('click', () => {
-      interactionCount++;
-      if (interactionCount > 3) {
-        document.body.style.background = 
-          'linear-gradient(135deg, #0a0a1a 0%, #121225 100%)';
-      }
     });
   </script>
 </body>
